@@ -9,9 +9,9 @@ class Layer:
         self.theta = theta
         self.a = a
 
-    def activate(self, previous_layer, input_layer=False):
+    def activate(self, previous_layer, next_to_input=False):
         # inserting the x_0's into the previous layer for theta_0's
-        if not input_layer:
+        if not next_to_input:
             previous_layer.a = insert(previous_layer.a, 0, 1, axis=1)
         self.a = g(matmul(previous_layer.a, previous_layer.theta.transpose()))
 

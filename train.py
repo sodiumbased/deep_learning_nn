@@ -1,10 +1,10 @@
 from Layer import *
 # Note to self: it's a good idea to start with like 5 images to make sure everything is working before moving on to 60000
 
-m = 10
+m = 60000
 bytes_to_read = m * 784
-lame = 0.1  # Inside joke: this is the regularization term lambda
-alpha = 0.1 # Learning rate term
+lame = 0.05  # Inside joke: this is the regularization term lambda
+alpha = 0.55 # Learning rate term
 
 # Parsing the training data and their labels
 with open("data/train-images-idx3-ubyte", "rb") as f:
@@ -22,12 +22,6 @@ training_labels = reshape(array([raw_labels[i] for i in range(m)]), (m,1))
 y = zeros((m,10))
 for i in range(m):
     y[i] = array([0 for a in range(training_labels[i][0])]+[1]+[0 for b in range(9-training_labels[i][0])])
-
-# import matplotlib.pyplot as plt
-# pixels = reshape(x[-3], (28,28))
-# plt.title('Shown image is for ' + str(y[-3]))
-# plt.imshow(pixels, cmap='gray')
-# plt.show()
 
 # Cost function
 def J(nn, training_data):
@@ -54,7 +48,7 @@ network.append(Layer())
 def train(nn, epoch):
     # using the instance variable nn
     def forward_propagation():
-        nn[1].activate(nn[0],input_layer=True)
+        nn[1].activate(nn[0],next_to_input=True)
         for i in range(2,len(nn)):
             nn[i].activate(nn[i-1])
     def back_propagation():
@@ -72,6 +66,10 @@ def train(nn, epoch):
         # print('Desired Output:\n', y)
         back_propagation()
 
-train(network, 10)
-
+train(network, 2)
+nn[1].activate(nn[0],next_to_input=True)
+for i in range(2,len(nn)):
+    nn[i].activate(nn[i-1])
+print(network[3].a[100])
+print(y[100])
 # TODO: remember to save the thetas at the end of training
