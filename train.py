@@ -1,10 +1,9 @@
 from Layer import *
-# Note to self: it's a good idea to start with like 5 images to make sure everything is working before moving on to 60000
 
-m = 60000
+m = 1000
 bytes_to_read = m * 784
 lame = 0.05  # Inside joke: this is the regularization term lambda
-alpha = 0.55 # Learning rate term
+alpha = 0.3 # Learning rate term
 
 # Parsing the training data and their labels
 with open("data/train-images-idx3-ubyte", "rb") as f:
@@ -45,7 +44,18 @@ network.append(Layer(theta=reshape(random.random(260),(10,26))))
 # Output layer
 network.append(Layer())
 
+def save(nn, filename):
+    import json
+    js_obj = {}
+    js_obj['cost'] = J(nn,y)    # using "global" instance y
+    for i in range(len(nn)-1):
+        js_obj['theta'+str(i+1)] = list(reshape(nn[i].theta, (nn[i].theta.size,)))
+    with open(filename,'w') as fi:
+        json.dump(js_obj, fi)
+
 def train(nn, epoch):
+    temp_cost = 50
+
     # using the instance variable nn
     def forward_propagation():
         nn[1].activate(nn[0],next_to_input=True)
@@ -56,20 +66,29 @@ def train(nn, epoch):
         nn[2].delt(nn[3], m, next_to_output=True)
         for i in range(len(nn)-3,-1,-1):
             nn[i].delt(nn[i+1],m)
+
+        # TODO: Don't penelize theta 0's !!!
         for i in range(len(nn)-2,-1,-1):
-            nn[i].theta -= nn[i].gradiant/m + nn[i].theta * lame / m
+            nn[i].theta -= nn[i].gradiant / m
+            nn[i].theta[:,1:] -= nn[i].theta[:,1:] * lame / m
 
     for i in range(epoch):
         forward_propagation()
-        print('Cost:', J(nn,y))
+        cost = J(nn,y)
+        # Save the thetas that produce the lowest cost
+        if cost < temp_cost:
+            save(nn,'parameters/min_cost.json')
+            temp_cost = cost
+        print('Cost:', cost)
         # print('Network Output:\n', nn[3].a)
         # print('Desired Output:\n', y)
         back_propagation()
 
-train(network, 2)
-nn[1].activate(nn[0],next_to_input=True)
-for i in range(2,len(nn)):
-    nn[i].activate(nn[i-1])
-print(network[3].a[100])
-print(y[100])
-# TODO: remember to save the thetas at the end of training
+train(network, 50)
+network[1].activate(network[0],next_to_input=True)
+for i in range(2,len(network)):
+    network[i].activate(network[i-1])
+print(network[3].a[50])
+print(y[50])
+# Save the thetas from the last descent/epoch
+save(network,'parameters/last_epoch.json')

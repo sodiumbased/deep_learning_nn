@@ -1,5 +1,6 @@
 from numpy import *
-m = 1
+# Change this m for the index of the picture you want to show
+m = 100
 bytes_to_read  = m * 784
 with open("data/train-images-idx3-ubyte", "rb") as f:
     meta = f.read(16)
@@ -12,7 +13,7 @@ with open("data/train-labels-idx1-ubyte", "rb") as f:
 y = reshape(array([raw_labels[i] for i in range(m)]), (m,1))
 
 import matplotlib.pyplot as plt
-pixels = reshape(x, (28,28))
-plt.title('Shown image is for ' + str(y))
+pixels = reshape(x[m-1], (28,28))
+plt.title('Shown image is for ' + str(y[m-1]))
 plt.imshow(pixels, cmap='gray')
 plt.show()
