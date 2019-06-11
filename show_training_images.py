@@ -1,6 +1,6 @@
 from numpy import *
 # Change this m for the index of the picture you want to show
-m = 100
+m = 56000
 bytes_to_read  = m * 784
 with open("data/train-images-idx3-ubyte", "rb") as f:
     meta = f.read(16)

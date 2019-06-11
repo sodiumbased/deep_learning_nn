@@ -1,7 +1,7 @@
 from Layer import *
 import json
 
-m = 1000
+m = 10000
 bytes_to_read = m * 784
 theta_filename = 'parameters/min_cost.json'
 # theta_filename = 'parameters/last_epoch.json'
@@ -27,10 +27,10 @@ y = array([raw[i] for i in range(m)])
 
 network = []
 # Input layer
-network.append(Layer(a=x,theta=reshape(array(js_obj['theta1']),(25,785))))
+network.append(Layer(a=x,theta=reshape(array(js_obj['theta1']),(50,785))))
 # Two hidden layers
-network.append(Layer(theta=reshape(array(js_obj['theta2']),(25,26))))
-network.append(Layer(theta=reshape(array(js_obj['theta3']),(10,26))))
+network.append(Layer(theta=reshape(array(js_obj['theta2']),(50,51))))
+network.append(Layer(theta=reshape(array(js_obj['theta3']),(10,51))))
 # Output layer
 network.append(Layer())
 
@@ -42,7 +42,7 @@ network_predictions = array([])
 for a in network[3].a:
     temp, prediction = 0, 0
     for confidence in range(a.size):
-        if confidence > temp:
+        if a[confidence] > temp:
             temp = a[confidence]
             prediction = confidence
     network_predictions = append(network_predictions, prediction)

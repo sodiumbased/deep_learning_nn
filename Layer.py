@@ -13,7 +13,9 @@ class Layer:
         # inserting the x_0's into the previous layer for theta_0's
         if not next_to_input:
             previous_layer.a = insert(previous_layer.a, 0, 1, axis=1)
+        # print(previous_layer.a, 'times', self.theta.transpose())
         self.a = g(matmul(previous_layer.a, previous_layer.theta.transpose()))
+        # print(self.a[0],'\n')
 
     def delt(self, next_layer, m, output_layer=False, next_to_output=False):
         # This function outputs the accumulated gradient for that layer and saves all smaller case delta's as an array of vectors for the previous layers to gradient descent
