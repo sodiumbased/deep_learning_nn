@@ -1,2 +1,5 @@
 # deep_learning_nn
 A feed forward deep learning neural network that is trained by gradient descent to recognize handwritten digits (training data provided by MNIST)
+
+## Difficulties and Challenges
+Despite constantly dealing with matrix multiplication dimension mismatch issues, I met one major obstacle in this project, where I learned how important careful random initialization is. At first, to avoid the problem induced by initializing all thetas to be zero where the backpropagation algorithm makes the same change to every theta, effectively reducing the network architecture to one neuron per layer rendering it essentially useless, I used the default numpy random matrix generator which outputs a matrix of some given size full of random values between 0 and 1 and reshaping them to the appropriate dimensions. However, I did not foresee the huge issue this initialization method would cause to arise. Specifically, when all 
