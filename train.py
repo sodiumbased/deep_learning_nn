@@ -1,10 +1,10 @@
 from Layer import *
 
-m = 10000
+m = 60000
 bytes_to_read = m * 784
-lame = 0.05  # Inside joke: this is the regularization constant lambda
-alpha = 0.1 # Learning rate constant
-epsilon = 0.5
+lame = 0.1  # Inside joke: this is the regularization constant lambda
+alpha = 0.2 # Learning rate constant
+epsilon = 0.5 # Random initialization range ([-e,e])
 
 # Parsing the training data and their labels
 with open("data/train-images-idx3-ubyte", "rb") as f:
@@ -100,8 +100,8 @@ def train(nn, epoch):
         # print('Network Output:\n', nn[3].a)
         # print('Desired Output:\n', y)
         back_propagation()
-        print(network[3].a[40])
-        print(y[40])
+        print(network[3].a[59000])
+        print(y[59000])
         print('--------------------\n')
 
 network = load_saved()
@@ -109,7 +109,7 @@ train(network, 20)
 network[1].activate(network[0],next_to_input=True)
 for i in range(2,len(network)):
     network[i].activate(network[i-1])
-print(network[3].a[50])
-print(y[50])
+print(network[3].a[150])
+print(y[150])
 # Save the thetas from the last descent/epoch
 save(network,'parameters/last_epoch.json')

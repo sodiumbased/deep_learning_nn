@@ -7,6 +7,8 @@ theta_filename = 'parameters/min_cost.json'
 # theta_filename = 'parameters/last_epoch.json'
 testfile_image = 'data/t10k-images-idx3-ubyte'
 testfile_label = 'data/t10k-labels-idx1-ubyte'
+# testfile_image = 'data/train-images-idx3-ubyte'
+# testfile_label = 'data/train-labels-idx1-ubyte'
 
 # Read thetas
 with open(theta_filename, 'r') as f:
