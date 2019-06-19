@@ -33,8 +33,6 @@ The fundamental principle behind a deep learning neural network is to mimic the 
 !["nn architecture"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/nn.png)
 *General visualization of a feed forward neural network. The mathematical equations will be explained bellow*
 
-[ADD NETWORK ARCHITECTURE ILLUSTRATION HERE] cap: mathematical equations explained later
-
 To calculate how much each neuron is stimulated, each input is simply multiplied with the corresponding weight, quantifying how sensitive the neuron's activation is to that input, then fed into an activation function. Naturally, it is quite easy to traverse forwards in this network and fetch an accurate prediction from the output of the network, provided that the right parameters are given. This raises the question: how does one find these parameters?
 
 ## The Problem
