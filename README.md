@@ -39,7 +39,7 @@ To calculate how much each neuron is stimulated, each input is simply multiplied
 
 ## The Problem
 
-The goal of the neural network is to read a 28x28 image and identify which digit it is from 0 to 9. This is what's known as a classification problem, where the answer lies in a certain discrete category. This neural network uses the "one versus all" method, where each output neuron signifies the probability of the image representing one digit compared to all other categories, denoted as *P(h<sub>θ</sub>(x)=1|x;θ)* (where 1 is true and 0 is false). For example, *P(h<sub>θ</sub>(x)<sub>j</sub>=1|x;θ) = 0.86* means that there is a 86% chance that this picture represents the digit *j* and a 14% that it's not.
+The goal of the neural network is to read a 28x28 image and identify which digit it is from 0 to 9. This is what is known as a classification problem, where the answer lies in a certain discrete category. This neural network uses the "one versus all" method, where each output neuron signifies the probability of the image representing one digit compared to all other categories, denoted as *P(h<sub>θ</sub>(x)=1|x;θ)* (where 1 is true and 0 is false). For example, *P(h<sub>θ</sub>(x)<sub>j</sub>=1|x;θ) = 0.86* means that there is a 86% chance that this picture represents the digit *j* and a 14% that it is not.
 
 Luckily, there is a free database called the MNIST dataset, which provided me with 60,000 sets of training data (images with their respective labels) and an additional 10,000 testing sets.
 
@@ -59,6 +59,7 @@ Since the parameters of the network can still be improved, the output of the net
 To solve this classification problem, *a<sup>(4)</sup><sub>j</sub> ϵ* [0,1], which means the weighted sum calculated from the previous layer must be fed into some activation function that satisfy this condition. The sigmoid function does this justly:
 
 !["sigmoid"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/sigmoid.png)
+
 *The parameter z of the sigmoid function is the weighted sum from the previous layer; the sigmoid function is denoted as g(z)*
 
 Dimension specification: the "activation" of the first layer (input layer) is a 60000x785 matrix, denoted as *a<sup>(1)</sup> ϵ ℝ<sup>60000x785</sup>*, and its parameters, *θ*, which are used to calculate the activation of the next layer, *θ<sup>(1)</sup> ϵ ℝ<sup>50x785</sup>* ; *a<sup>(2)</sup> ϵ ℝ<sup>60000x51</sup>*, *θ<sup>(2)</sup> ϵ ℝ<sup>50x51</sup>* ; *a<sup>(3)</sup> ϵ ℝ<sup>60000x51</sup>*, *θ<sup>(3)</sup> ϵ ℝ<sup>10x51</sup>* ; *a<sup>(4)</sup> ϵ ℝ<sup>60000x10</sup>*.
@@ -69,33 +70,38 @@ The reason why each layer's activation has one more neuron than the architecture
 
 ## The Cost Function
 
-Again, since the output of each neuron in the neural network *a<sub>j</sub><sup>(4)</sup> ϵ* [0, 1] , it is much better to use a logarithmic cost function than simply taking the squared difference between the network output and the training label. More specifically, when *y<sub>j</sub> = 1* for some j ϵ [1,m] given m training sets (or images in this case), the cost function is *-ln h<sub>θ</sub>(x)* where if *h<sub>θ</sub>(x)* approaches 0, which is where we don't want it to be, cost will approach infinity. Similarly, when *y<sub>j</sub> = 0*, the cost is modeled as *-ln (1 - h<sub>θ</sub>(x))*, where as *h<sub>θ</sub>(x)* approaches 1, cost approaches infinity. Furthermore, in order to prevent overfitting, a phenomenon that occurs when the parameters in the neural work are too large, resulting in some complex but unnecessary decision boundaries (the curves describing how the network makes decisions i.e. in "one versus all" classification scenarios) that only fits the training data well but fails to extrapolate when processing examples outside of the training set. As a result, the average size of each parameter (except *θ<sub>0</sub>*'s) must also be taken into consideration into the cost of the network, multiplied by some constant *λ ϵ ℝ*. This practice is known as regularization. Here is the compounded cost function:
+Again, since the output of each neuron in the neural network *a<sub>j</sub><sup>(4)</sup> ϵ* [0, 1] , it is much better to use a logarithmic cost function than simply taking the squared difference between the network output and the training label. More specifically, when *y<sub>j</sub> = 1* for some j ϵ [1,m] given m training sets (or images in this case), the cost function is *-ln h<sub>θ</sub>(x)* where if *h<sub>θ</sub>(x)* approaches 0, which is the opposite of the desired result, cost will approach infinity. Similarly, when *y<sub>j</sub> = 0*, the cost is modeled as *-ln (1 - h<sub>θ</sub>(x))*, where as *h<sub>θ</sub>(x)* approaches 1, cost approaches infinity. Furthermore, in order to prevent overfitting, a phenomenon that occurs when the parameters in the neural work are too large, resulting in some complex but unnecessary decision boundaries (the curves describing how the network makes decisions i.e. in "one versus all" classification scenarios) that only fits the training data well but fails to extrapolate when processing examples outside of the training set. As a result, the average size of each parameter (except *θ<sub>0</sub>*'s) must also be taken into consideration into the cost of the network, multiplied by some constant *λ ϵ ℝ*. This practice is known as regularization. Here is the compounded cost function:
 
 !["cost function"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/cost.png)
-*The cost function quantifies the average loss in training when compared to the actual training labels over every training set (regularization included)*
+*The cost function, denoted as J(θ), quantifies the average loss in training when compared to the actual training labels over every training set (regularization included)*
 
 !["cost graph"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/cost_graph.png)
 *Logarithmic cost function visualized*
 
 ## Backpropagation
 
-This is the heart of this project where we find the right thetas such that the output of the network matches the training labels as close as possible. Here I used a optimization technique called gradient descent. This technique is very intuitive because the thetas are updated according to their impact to the output of the cost function and are therefore improved iteratively. Concretely, by subtracting the partial derivative of the cost function with respect to one theta means that: if the derivative is positive, the theta is reduced to lower the cost, and vice versa when the derivative is negative. This derivative is often multiplied by a constant called learning rate *α ϵ ℝ*. It is very important to do a few test training runs to find an α such that the cost decreases over the iterations at a reasonable pace because a large α can cause the gradient descent to diverge from the local minimum instead of converging; and an α that's too small will result in unnecessarily many steps to converge to a local minimum, which is computationally costly. It is also worth mentioning that if the regularization constant λ is too small, it would have little effect in preventing overfitting; however too large a λ can result in the network underfitting even the training data which is not ideal either.
+This is the heart of this project where we find the right thetas such that the output of the network matches the training labels as close as possible. Here I used a optimization technique called gradient descent. This technique is very intuitive because the thetas are updated according to their impact to the output of the cost function and are therefore improved iteratively. Concretely, by subtracting the partial derivative of the cost function with respect to one theta means that: if the derivative is positive, the theta is reduced to lower the cost, and vice versa when the derivative is negative. This derivative is often multiplied by a constant called learning rate *α ϵ ℝ*. It is very important to do a few test training runs to find an α such that the cost decreases over the iterations at a reasonable pace because a large α can cause the gradient descent to diverge from the local minimum instead of converging; and an α that is too small will result in unnecessarily many steps to converge to a local minimum, which is computationally costly. It is also worth mentioning that if the regularization constant λ is too small, it would have little effect in preventing overfitting; however too large a λ can result in the network underfitting even the training data which is not ideal either.
 
 Here are the derived steps of how to update each theta using linear algebra. It is very important to update all thetas simultaneously or else gradient descent becomes unpredictable due to thetas changing according to the thetas before it which may cause failure to converge to local minimum.
 
 !["gd1"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd1.png)
+
 *All thetas change according to their respective derivative results*
 
 !["gd2"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd2.png)
+
 *Apply this for all l (layers), i (neurons in that layer) and j (θs associated with that neuron)*
 
 !["gd3"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd3.png)
+
 *The upper case delta terms are accumulated with the lower case delta terms*
 
 !["gd4"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd4.png)
+
 *All lower case delta terms are calculated iteratively to form an array of vectors because I couldn't figure out how to optimize this step with linear algebra*
 
 !["gd5"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd5.png)
+
 *The small delta term for each layer at a given training data set is the theta from that layer transposed, then multiplied by the small delta term from the previous layer, then element-wise multiplied (.\*) by the derivative of the activation sigmoid function*
 
 ## Difficulties and Challenges
@@ -107,4 +113,4 @@ Despite constantly dealing with matrix multiplication dimension mismatch issues,
 
 ## Conclusion
 
-
+After about 60 hours of training, the output from ```test.py``` shows that the network has 87.63% accuracy rate against the 10,000 testing images. However, in my own testing where I feed my own handwritten digits as the input for the neural network via ```paint.py```, I found that the network is only about 50-60% accurate, which does not reflect its score in ```test.py```. I am uncertain for the cause of the conflicting results but I have some theories to explain it. The neurons may be trained to look at very specific pixel values instead of being able to see more patterns between the pixels, regardless of where they are translated or resized, or I simply did not design the architecture of the network with enough hidden neurons/hidden layers. Although I understand the shortcomings of this simple feed forward neural network, I am still satisfied with my first attempt at any neural networks or machine learning in general. My next step is to learn more about other types of machine learning because this has been such a great learning experience and I am greatly intrigued by the industry.
