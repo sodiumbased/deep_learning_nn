@@ -1,10 +1,6 @@
-# Deep Learning Neural Network
+# Handwritten Digit Reader
 
-A feed forward deep learning neural network that is trained with gradient descent to recognize handwritten digits (training data provided by MNIST) written in python (numpy included)
-
-## Objective
-
-The purpose of this project is to solve the classic problem of machines not being able to read human handwritten digits with a modern neural network, where techniques like gradient descent are used.
+An interactive reader implemented with a feedforward deep learning neural network optimized with gradient descent and trained with MNIST. Written in Python using Numpy and Pygame.
 
 ## Usage
 
@@ -82,7 +78,7 @@ This is the heart of this project where we find the right thetas such that the o
 
 Here are the derived steps of how to update each theta using linear algebra. It is very important to update all thetas simultaneously or else gradient descent becomes unpredictable due to thetas changing according to the thetas before it which may cause failure to converge to local minimum.
 
-!["gd1"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd1.png)
+<img src="https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd1.png" width="400" height="110"/>
 
 *All thetas change according to their respective derivative results*
 
@@ -94,11 +90,11 @@ Here are the derived steps of how to update each theta using linear algebra. It 
 
 *The upper case delta terms are accumulated with the lower case delta terms*
 
-!["gd4"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd4.png)
+<img src="https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd4.png" width="260" height="70"/>
 
 *All lower case delta terms are calculated iteratively to form an array of vectors because I couldn't figure out how to optimize this step with linear algebra*
 
-!["gd5"](https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd5.png)
+<img src="https://github.com/sodiumbased/deep_learning_nn/blob/master/report_images/gd5.png" width="450" height="70"/>
 
 *The small delta term for each layer at a given training data set is the theta from that layer transposed, then multiplied by the small delta term from the previous layer, then element-wise multiplied (.\*) by the derivative of the activation sigmoid function*
 
